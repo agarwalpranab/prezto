@@ -10,4 +10,233 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+
+#=======================================================================
+# Senses if the go compiler is installed
+#=======================================================================
+
+GO_BIN=/opt/homebrew/bin
+if [ -x "$GO_BIN/go" ] ; then
+   export GOPATH="$HOME/go"
+   export PATH="$PATH:$GO_BIN:$GOPATH/bin"
+fi
+unset GO_BIN
+
+export PATH="/opt/homebrew/opt/openjdk/bin:/Users/pranab/.slack/bin:$PATH"
+
 # Customize to your needs...
+################################################################################
+###########################        Git Aliases         #########################
+################################################################################
+alias status="git status"
+alias difftool="yes y|git difftool ."
+alias restore="git restore ."
+alias gitrepo="cd $GITREPO; ls -l"
+alias fpush="git push origin -f"
+
+
+#alias rebase="git rebase -i origin/develop"
+#alias rebase1="git rebase -i origin/main"
+#alias pull="git pull --rebase origin develop"
+#alias pull1="git pull --rebase origin main"
+#alias push="git push myfork"
+#alias push="git push origin"
+#alias fpush="git push myfork -f"
+#alias dev="git checkout develop"
+#alias dev1="git checkout main"
+
+# Function to check if "Development" or "main" branch exists and return the branch name
+check_development_branch() {
+    # Get all local branches
+    local branches=$(git branch --list)
+    
+    # Check if "development" branch exists
+    if echo "$branches" | grep -q "development"; then
+        echo "development"
+        return 0
+    elif echo "$branches" | grep -q "main"; then
+        echo "main"
+        return 0
+    elif echo "$branches" | grep -q "master"; then
+        echo "master"
+        return 0
+    else
+        echo ""
+        return 1
+    fi
+}
+
+rebase() {
+    branch_name=$(check_development_branch)
+    exit_code=$?
+    if [ $exit_code -eq 0 ]; then
+        echo "Found branch: $branch_name"
+        echo "We can now use '$branch_name' for further operations"
+        git pull --rebase origin "$branch_name"
+    else
+        echo "Did not find the either development or main branch. Exiting."
+    fi
+}
+
+pull() {
+    branch_name=$(check_development_branch)
+    exit_code=$?
+    if [ $exit_code -eq 0 ]; then
+        echo "Found branch: $branch_name"
+        echo "We can now use '$branch_name' for further operations"
+	git pull --rebase origin "$branch_name"
+    else
+        echo "Did not find the either development or main branch. Exiting."
+    fi
+}
+
+dev() {
+    branch_name=$(check_development_branch)
+    exit_code=$?
+    if [ $exit_code -eq 0 ]; then
+        echo "Found branch: $branch_name"
+        echo "We can now use '$branch_name' for further operations"
+	git checkout "$branch_name"
+    else
+        echo "Did not find the either development or main branch. Exiting."
+    fi
+}
+
+push()
+{
+  # Get the current branch name
+  branch=$(git rev-parse --abbrev-ref HEAD)
+
+  echo "Current branch: $branch"
+
+  # Push to remote and set upstream
+  git push --set-upstream origin "$branch"
+}
+
+add()
+{
+  if [ -z "$1" ]; then
+      git add .
+  else
+      git add $1
+  fi
+}
+
+
+branch()
+{
+  if [ ! -z "$1" ]; then
+    branch_name=$(check_development_branch)
+    exit_code=$?
+
+    # Use the returned branch name
+    if [ $exit_code -eq 0 ]; then
+      echo "Found branch: $branch_name"
+      echo "We can now use '$branch_name' for further operations"
+      git checkout "$branch_name"
+    else
+      echo "No development or main branch found"
+    fi
+    git checkout -b $1 -t
+  else
+    echo "Usage: $funcstack[1] SomeMeaningfulString"
+    echo
+    echo
+    git branch
+  fi
+}
+
+checkout()
+{
+	if [ ! -z "$1" ]; then
+		git checkout $1
+	else
+		echo "Usage: $funcstack[1] <branchName>"
+	fi
+}
+
+commit()
+{
+	if [ ! -z "$1" ]; then
+		git commit -m "$1"
+	else
+		echo "Usage: $funcstack[1] ISVA-XXXX Description"
+	fi
+}
+
+pullall()
+{
+	branch_name=$(check_development_branch)
+	exit_code=$?
+
+	# Use the returned branch name
+	if [ $exit_code -eq 0 ]; then
+	    echo "Found branch: $branch_name"
+	    echo "We can now use '$branch_name' for further operations"
+	else
+	    echo "No development or main branch found"
+	fi
+
+	cd $GITREPO
+	find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} checkout "$branch_name" \;
+	find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} pull --rebase origin "$branch_name" \;
+	find . -mindepth 1 -maxdepth 1 -type d -print -exec git -C {} push origin \;
+}
+
+ssh-forward-local-443 ()
+{
+    if [ ! -z "$1" ] && [ ! -z "$2" ]; then
+        sudo -E ssh $1 -L443:$2:443 -F /Users/$USER/.ssh/config
+    else
+        echo "Usage: ${FUNCNAME[0]} host_to_ssh_to host_to_forward_443_to";
+    fi
+}
+
+################################################################################
+#####################      Docker Commands            ##########################
+################################################################################
+alias images="docker images"
+alias prune="yes y | docker images prune; docker container prune; docker volume prune"
+alias purge="yes y | docker images prune; docker container prune; docker volume prune"
+#alias drmi= "docker images | awk -F ' ' '{print $3}' | xargs docker rmi -f"
+alias drmi="docker images | cut -w -f3 | xargs docker rmi -f "
+
+alias ic="ibmcloud"
+
+
+pv()
+{
+  if [ ! -z "$1" ]; then
+    kubectl get pv -n $1
+  else
+    kubectl get pv
+  fi
+}
+
+pvc()
+{
+  if [ ! -z "$1" ]; then
+    kubectl get pvc -n $1
+  else
+    kubectl get pvc
+  fi
+}
+
+descpvc()
+{
+  if [ ! -z "$1" ]; then
+    kubectl get pvc -n $1
+  else
+    kubectl get pvc
+  fi
+}
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/pranab/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+
+#alias docker=podman
+#alias docker-compose=podman-compose
+

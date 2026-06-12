@@ -9,3 +9,25 @@
 if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
+
+export GH_ACCESS_TOKEN=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
+export GH_ORG_NAME=isva-l3
+export GH_TEAM_NAME=SWG_Metrics
+
+export BUILD_ENV_VERSION=2.1
+#export GITREPO=/Users/pranab/Documents/Coding/gitRepo/QROC_Projects
+#export GITREPO=/Users/pranab/Documents/Coding/gitRepo/NextGenNDR
+export GITREPO=/Users/pranab/Documents/Coding/gitRepo/Identity
+
+export PATH="/usr/local/opt/icu4c/bin:$PATH"
+export PATH="/usr/local/opt/icu4c/sbin:$PATH"
+export LDFLAGS="-L/usr/local/opt/icu4c/lib"
+export CPPFLAGS="-I/usr/local/opt/icu4c/include"
+export PATH="/usr/local/anaconda3/bin:$PATH"
+export PATH=/opt/homebrew/bin/gradle:$PATH
+
+export HOME_FOLDER=pranab
+export JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home
+
+export FYRE_API_USER=pranab.agarwal
+export FYRE_API_TOKEN=MzyXWl5SrRj6I8EGg2uF5WsKFwhb468D37cfFv8eh
