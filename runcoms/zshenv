@@ -10,7 +10,6 @@ if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; t
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
 
-export GH_ACCESS_TOKEN=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
 export GH_ORG_NAME=isva-l3
 export GH_TEAM_NAME=SWG_Metrics
 
