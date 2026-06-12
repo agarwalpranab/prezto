@@ -29,4 +29,3 @@ export HOME_FOLDER=pranab
 export JAVA_HOME=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home
 
 export FYRE_API_USER=pranab.agarwal
-export FYRE_API_TOKEN=MzyXWl5SrRj6I8EGg2uF5WsKFwhb468D37cfFv8eh
