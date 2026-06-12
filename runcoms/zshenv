@@ -10,8 +10,6 @@ if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; t
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
 
-export GH_ORG_NAME=isva-l3
-export GH_TEAM_NAME=SWG_Metrics
 
 export BUILD_ENV_VERSION=2.1
 #export GITREPO=/Users/pranab/Documents/Coding/gitRepo/QROC_Projects
